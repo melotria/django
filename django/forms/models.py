@@ -1112,6 +1112,7 @@ class BaseInlineFormSet(BaseModelFormSet):
         save_as_new=False,
         prefix=None,
         queryset=None,
+        auto_id="id_%s",
         **kwargs,
     ):
         if instance is None:
@@ -1126,7 +1127,7 @@ class BaseInlineFormSet(BaseModelFormSet):
         else:
             qs = queryset.none()
         self.unique_fields = {self.fk.name}
-        super().__init__(data, files, prefix=prefix, queryset=qs, **kwargs)
+        super().__init__(data, files, auto_id=auto_id, prefix=prefix, queryset=qs, **kwargs)
 
         # Add the generated field to form._meta.fields if it's defined to make
         # sure validation isn't skipped on that field.
