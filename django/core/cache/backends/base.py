@@ -58,6 +58,13 @@ def get_key_func(key_func):
 class BaseCache:
     _missing_key = object()
 
+    def check(self, **kwargs):
+        """
+        Check the cache backend for potential issues.
+        Returns a list of Warnings and Errors.
+        """
+        return []
+
     def __init__(self, params):
         timeout = params.get("timeout", params.get("TIMEOUT", 300))
         if timeout is not None:
