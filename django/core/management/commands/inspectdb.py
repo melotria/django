@@ -260,6 +260,7 @@ class Command(BaseCommand):
                     is_view,
                     is_partition,
                     comment,
+                    primary_key_columns,
                 )
 
     def normalize_col_name(self, col_name, used_column_names, is_relation):
@@ -375,6 +376,7 @@ class Command(BaseCommand):
         is_view,
         is_partition,
         comment,
+        primary_key_columns=None,
     ):
         """
         Return a sequence comprising the lines of code necessary
@@ -391,7 +393,12 @@ class Command(BaseCommand):
                 columns = [
                     x for x in columns if x is not None and x in column_to_field_name
                 ]
-                if len(columns) > 1:
+                # Skip unique constraints that match the composite primary key
+                if len(columns) > 1 and not (
+                    primary_key_columns
+                    and len(primary_key_columns) > 1
+                    and set(columns) == set(primary_key_columns)
+                ):
                     unique_together.append(
                         str(tuple(column_to_field_name[c] for c in columns))
                     )
